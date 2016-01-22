@@ -51,22 +51,230 @@ public class Easy {
 		return sum;
 	}
 	
-	//Challenge 3-Largest Prime Factor
+	//Challenge 3-Largest Prime Factor 1st solution
 	public static long lpf(){
-		int m = 0;
+		int maxf = 2;
+		int lastfactor = 1;
 		long total = 600851475143L;
 		
-		return total;
+		if (total %maxf==0){
+			lastfactor = maxf;
+			total = total / maxf;
+			while (total%maxf ==0){
+				total = total / maxf;
+			}
+			lastfactor = maxf;
+		}
+		maxf = 3;
+		while (total>1){
+			if (total % maxf == 0){
+				lastfactor = maxf;
+				total = total / maxf;
+				while (total%maxf ==0){
+					total = total / maxf;
+				}
+			}
+			maxf+=2;
+		}
+		return lastfactor;
 	}
 	
+	public static long lpf1(){
+		int maxf = 2;
+		int lastfactor = 1;
+		long total = 600851475143L;
+		
+		if (total %maxf==0){
+			lastfactor = maxf;
+			total = total / maxf;
+			while (total%maxf ==0){
+				total = total / maxf;
+			}
+			lastfactor = maxf;
+		}
+		double limit = Math.sqrt(total);
+		maxf = 3;
+		while (total>1 && maxf<limit){
+			if (total % maxf == 0){
+				lastfactor = maxf;
+				total = total / maxf;
+				while (total%maxf ==0){
+					total = total / maxf;
+				}
+				limit = Math.sqrt(total);
+			}
+			
+			maxf+=2;
+		}
+		if (total == 1){
+			return lastfactor;
+		}
+		else{
+			return total;
+		}
+	}
+	
+	//Challenge 4-Largest Palindrome product 1st solution
+	public static int lpp(){
+		int result = 0;
+		for (int i =100;i<1000;i++){
+			for (int j = 100;j<1000;j++){
+				int prod = i*j;
+				if (prod> result && isPal(prod)){
+					result = prod;
+				}
+			}
+		}
+		return result;
+	}
+	
+	//Challenge 4-Helper
+	public static boolean isPal(int num){
+		String strprod = String.valueOf(num);
+		int max = strprod.length();
+		for (int i = 0;i<=max/2;i++){
+			if (strprod.charAt(i) != strprod.charAt(max-1-i)){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	//Challenge 4-Better Solution
+	public static int lpp1(){
+		int result = 0;
+		int i = 999;
+		while (i>100){
+			int j = 999;
+			while (j>=i){
+				int prod = i*j;
+				if (prod<result){
+					break;
+				}
+				if (prod>result && isPal(prod)){
+					result = prod;
+				}
+				j=j-1;
+			}
+			i=i-1;
+		}
+		return result;
+	}
+	
+	//Challenge 4-Modular
+	public static int lpp2(){
+		int result = 0;
+		int i = 999;
+		int dj = 1;
+		while (i>100){
+			int j =999;
+			if (i% 11 ==0){
+				dj = 1;
+			}
+			else{
+				j =990;
+				dj = 11;
+			}
+			while (j>=i){
+				int prod = i*j;
+				if (prod<result){
+					break;
+				}
+				if (prod>result && isPal(prod)){
+					result = prod;
+				}
+				j=j-dj;
+			}
+			i=i-1;
+		}
+		return result;
+	}
+	
+	//Challenge 5-EvenlyDivisible
+	public static int ed(){
+		int start = 20;
+		int[] ar = {1,3,5,7,11,13,17,19,2,4,6,8,9,10,12,14,15,16,18,20};
+		boolean cont = true;
+		while (cont){
+			cont = false;
+			for (int a: ar){
+				if (start%a!=0)
+					cont = true;
+			}
+			start+=20;
+			//System.out.println(start);
+		}
+		return start;
+	}
+	
+	//Challenge 5-findPrimes Brute force
+	public static boolean isPrime(int num){
+		for (int i= 2;i<num;i++){
+			if (num%i==0){
+				return false;
+			}
+		}
+		return true;
+	}
+	//Challenge 5-BetterSolution
+	public static double ed(int max){
+		int result =1;
+		boolean maxExp = true;
+		for (int i =2;i<max+1;i++){
+			if (isPrime(i)){
+				if (maxExp){
+					double e = 1;
+					double i2 = i;
+					while (Math.pow(i2, e)<max){
+						e+=1;
+					}
+					e=e-1;
+					if (e==1){
+						maxExp = false;
+					}
+					System.out.println((int)Math.pow(i2, e));
+
+					result = result*(int)Math.pow(i2, e);
+				}
+				else{
+					System.out.println(i);
+					result = result*i;
+				}
+			}
+		}
+		return result;
+	}
+	
+	//Challenge 6-Difference Sum of Squares and Square of Sum
+	public static int ssd(int num){
+		int small = 0;
+		int de = 1;
+		int base = 0;
+		for (int i = 1;i<num+1;i++){
+			base += de;
+			small = small + base;
+			de +=2;
+		}
+		double a_sum = 1.0*(1+num)*num/2;
+		int big = (int)Math.pow(a_sum, 2);
+		
+		return big-small;
+	}
 	public static void main(String[] args){
 		// Sol1
 		   //System.out.println(mult(1000));
 		// Better Sol1
-		System.out.println(mult1(999,3)+mult1(999,5)-mult1(999,15));
-		System.out.println(fibEven());
-		System.out.println(fibEven1());
-		System.out.println(lpf());
+		//System.out.println(mult1(999,3)+mult1(999,5)-mult1(999,15));
+		//System.out.println(fibEven());
+		//System.out.println(fibEven1());
+		//System.out.println(lpf());
+		//System.out.println(lpf1());
+		//System.out.println(lpp());
+		//System.out.println(lpp1());
+		//System.out.println(lpp2());
+		//System.out.println(ed());
+		//System.out.println(ed(20));
+		System.out.println(ssd(100));
 	}
 
 }
