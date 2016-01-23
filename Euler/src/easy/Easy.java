@@ -1,5 +1,7 @@
 package easy;
 import java.util.ArrayList;
+import java.io.File;
+import java.util.Scanner;
 
 public class Easy {
 	//Challenge 1
@@ -260,6 +262,95 @@ public class Easy {
 		
 		return big-small;
 	}
+	
+	//Challenge 7-10001 prime number
+	public static int prime(int nth){
+		int result = 2;
+		int prime_count = 1;
+		int num = 3;
+		while (prime_count<nth){
+			if (isPrime(num)){
+				result = num;
+				prime_count++;
+			}
+			num+=2;
+		}
+		return result ;
+	}
+	
+	public static int highSeq(String file){
+		File f = new File(file);
+		int max = 0; 
+		int front = 0;
+		int back = 0;
+		try{
+			Scanner s = new Scanner(f);
+	
+			while (s.hasNext()){
+				String line = s.next();
+				int lmax = 0;
+				int dif = 0;
+				int start = 0;
+				int index = 0;
+				boolean searching = true;
+				while (searching){
+					int val = Integer.valueOf(line.charAt(start+index));
+					if (val == 0){
+						start = start+index;
+						index = 0;
+						lmax = 0;
+						//unless 0 is past end of line
+					}
+					if (index ==0){
+						front = val;
+					}
+					lmax+= val;
+					if (index ==12){
+						back = val;
+						start = start+index+1;
+						index = 0;
+						searching = false;
+					}
+				}
+				searching = true;
+				while (searching){
+					int val = Integer.valueOf(line.charAt(start+index));
+					if (val == 0){
+						start = start+index;
+						index = 0;
+						lmax = 0;
+						//unless 0 is past end of line
+					}
+					if (index ==0){
+						front = val;
+					}
+					lmax+= val;
+					if (index ==12){
+						back = val;
+						searching = false;
+					}
+				}
+				for (int i=13; i<line.length();i++){
+					int valb = Integer.valueOf(line.charAt(i));
+					int valf = Integer.valueOf(line.charAt(i));
+					dif += (valb - back) + (valf - front);
+					if (dif > 0){
+						lmax+=dif;
+						dif = 0;
+					}
+					back = valb;
+					front = valf;
+				}
+				if (lmax>max){
+					max =lmax;
+				}
+			}
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+		return 0;
+	}
 	public static void main(String[] args){
 		// Sol1
 		   //System.out.println(mult(1000));
@@ -274,7 +365,8 @@ public class Easy {
 		//System.out.println(lpp2());
 		//System.out.println(ed());
 		//System.out.println(ed(20));
-		System.out.println(ssd(100));
+		//System.out.println(ssd(100));
+		System.out.println(prime(10001));
 	}
 
 }
