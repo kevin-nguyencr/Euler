@@ -2,6 +2,9 @@ package easy;
 import java.util.ArrayList;
 import java.io.File;
 import java.util.Scanner;
+import java.util.Queue;
+import java.util.LinkedList;
+import java.util.Deque;
 
 public class Easy {
 	//Challenge 1
@@ -278,79 +281,93 @@ public class Easy {
 		return result ;
 	}
 	
-	public static int highSeq(String file){
+	//Challenge 8-13consecutive
+	public static long highSeq(String file){
 		File f = new File(file);
-		int max = 0; 
-		int front = 0;
-		int back = 0;
+		long max = 0;
+		int linen = 0;
 		try{
 			Scanner s = new Scanner(f);
-	
+			Deque<Integer> q = new LinkedList<Integer>();
+			long localMax = 0;
+			long curMax = 0;
 			while (s.hasNext()){
+				linen++;
 				String line = s.next();
-				int lmax = 0;
-				int dif = 0;
-				int start = 0;
-				int index = 0;
-				boolean searching = true;
-				while (searching){
-					int val = Integer.valueOf(line.charAt(start+index));
-					if (val == 0){
-						start = start+index;
-						index = 0;
-						lmax = 0;
-						//unless 0 is past end of line
+				char[] charArray = line.toCharArray();
+				for (int i = 0;i<charArray.length;i++){
+					int val = charArray[i] - '0';
+					q.add(val);
+					if (q.size()== 13){
+						if (val != 0){							
+							curMax = curMax*val;
+							if (curMax>localMax){
+								localMax = curMax;
+								if (localMax>max){
+									max = localMax;
+								}	
+							}
+							int first = q.pollFirst();
+							curMax = curMax/first;
+						}
+						//logic to skip forward
+						else{
+							q.clear();
+							curMax = 0;
+						}
 					}
-					if (index ==0){
-						front = val;
+					else {
+						if (val !=0){
+							if (q.size() == 1){
+								curMax += val;
+							}
+							else{
+								curMax = curMax*val;
+								
+							}
+						}
+						else{
+							curMax = 0;
+							q.clear();
+						}
 					}
-					lmax+= val;
-					if (index ==12){
-						back = val;
-						start = start+index+1;
-						index = 0;
-						searching = false;
-					}
+					
 				}
-				searching = true;
-				while (searching){
-					int val = Integer.valueOf(line.charAt(start+index));
-					if (val == 0){
-						start = start+index;
-						index = 0;
-						lmax = 0;
-						//unless 0 is past end of line
-					}
-					if (index ==0){
-						front = val;
-					}
-					lmax+= val;
-					if (index ==12){
-						back = val;
-						searching = false;
-					}
-				}
-				for (int i=13; i<line.length();i++){
-					int valb = Integer.valueOf(line.charAt(i));
-					int valf = Integer.valueOf(line.charAt(i));
-					dif += (valb - back) + (valf - front);
-					if (dif > 0){
-						lmax+=dif;
-						dif = 0;
-					}
-					back = valb;
-					front = valf;
-				}
-				if (lmax>max){
-					max =lmax;
-				}
+
 			}
 		}
 		catch (Exception e){
 			e.printStackTrace();
 		}
-		return 0;
+		//23514624000
+		return max;
 	}
+	
+	//Challenge 9-Pythagorean triplet brute force
+	public static int[] trip(double goal){
+		// a < b < c
+		int[] result = new int[3];
+		int max = 500;
+		for (int c = max; c>0;c=c-1){
+			//System.out.println(c);
+			for (int b = c;b>0;b=b-1){
+				for (int a = b;a>0;a=a-1){
+					if ((a*a + b*b == c*c) && (a + b + c == 1000)){
+						result[0] = a;
+						result[1] = b;
+						result[2] = c;
+					}
+				}
+			}
+		}
+		return result;
+	}
+	
+	//Challenge 9-Pythagorean triplet Better
+		public static int[] trip2(double goal){
+			int[] result = new int[3];
+			return result;
+		}
 	public static void main(String[] args){
 		// Sol1
 		   //System.out.println(mult(1000));
@@ -366,7 +383,12 @@ public class Easy {
 		//System.out.println(ed());
 		//System.out.println(ed(20));
 		//System.out.println(ssd(100));
-		System.out.println(prime(10001));
+		//System.out.println(prime(10001));
+		//System.out.println(highSeq("inputFiles/input8.txt"));
+		System.out.println(trip(1000)[0]);
+		System.out.println(trip(1000)[1]);
+		System.out.println(trip(1000)[2]);
+		
 	}
 
 }
